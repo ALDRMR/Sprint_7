@@ -1,5 +1,10 @@
 package Model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Courier {
     private String id;
     private String login;
@@ -17,10 +22,4 @@ public class Courier {
         this.password = password;
     }
 
-    public void setId(String id) { this.id = id; }
-    public String getId() { return id; }
-
-    public String getLogin() { return login; }
-    public String getPassword() { return password; }
-    public String getFirstName() { return firstName; }
 }
