@@ -1,6 +1,6 @@
+import config.ApiTestsConfig;
 import model.Order;
 import io.qameta.allure.Allure;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -24,19 +23,17 @@ public class OrderTests {
 
     @BeforeEach
     public void setUp() {
-        baseURI = "https://qa-scooter.education-services.ru/";
         createdOrders = new ArrayList<>();
     }
 
     @Step("Создать заказ POST /api/v1/orders")
     public Order createOrder(Order order){
         Integer track = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(order)
                 .when()
                 .post("/api/v1/orders")
                 .then()
-                .log().body()
                 .statusCode(201)
                 .extract()
                 .path("track");
@@ -53,12 +50,11 @@ public class OrderTests {
         Allure.step("Отменить заказ PUT /api/v1/orders/cancel track: " + track);
 
         given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .queryParam("track", track)
                 .when()
                 .put("/api/v1/orders/cancel")
                 .then()
-                .log().body()
                 .statusCode(200);
     }
 
@@ -92,12 +88,11 @@ public class OrderTests {
 
         Allure.step("вызов POST /api/v1/orders");
         Integer track = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(order)
                 .when()
                 .post("/api/v1/orders")
                 .then()
-                .log().body()
                 .statusCode(201)
                 .extract()
                 .path("track");
@@ -181,11 +176,10 @@ public class OrderTests {
 
         Allure.step("Вызов GET /api/v1/orders");
             given()
-                .contentType(ContentType.JSON)
+                    .spec(ApiTestsConfig.getSpecification())
                 .when()
                 .get("/api/v1/orders")
                 .then()
-                .log().body()
                 .statusCode(200);
     }
 }

@@ -1,14 +1,13 @@
+import config.ApiTestsConfig;
 import model.Courier;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,19 +18,17 @@ public class CourierTests {
 
     @BeforeEach
     public void setUp() {
-        baseURI = "https://qa-scooter.education-services.ru/";
         createdCouriers = new ArrayList<>();
     }
 
     @Step("Создать курьера POST /api/v1/courier")
     public void createCourier(Courier courier) {
         given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier")
                 .then()
-                .log().body()
                 .statusCode(201);
 
         createdCouriers.add(courier);
@@ -40,12 +37,11 @@ public class CourierTests {
     public String getCourierId(Courier courier) {
         Allure.step("getCourierId " + "Вызов /api/v1/courier/login " + courier.getLogin());
         Integer extractedId = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier/login")
                 .then()
-                .log().body()
                 .statusCode(200)
                 .extract()
                 .path("id");
@@ -58,12 +54,11 @@ public class CourierTests {
     public void deleteCourier(String id) {
         Allure.step("Удалить Курьера, вызов /api/v1/courier/{id} id:" + id);
         given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .pathParam("id", id)
                 .when()
                 .delete("/api/v1/courier/{id}")
                 .then()
-                .log().body()
                 .statusCode(200);
     }
 
@@ -92,12 +87,11 @@ public class CourierTests {
 
         Allure.step("Вызов POST /api/v1/courier");
         Boolean answer = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier")
                 .then()
-                .log().body()
                 .statusCode(201)
                 .extract()
                 .path("ok");
@@ -120,12 +114,11 @@ public class CourierTests {
 
         Allure.step("Вызов POST /api/v1/courier");
         String answer = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier")
                 .then()
-                .log().body()
                 .statusCode(409)
                 .extract()
                 .path("message");
@@ -145,12 +138,11 @@ public class CourierTests {
 
         Allure.step("Вызов POST /api/v1/courier");
         String answer = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier")
                 .then()
-                .log().body()
                 .statusCode(400)
                 .extract()
                 .path("message");
@@ -173,12 +165,11 @@ public class CourierTests {
 
         Allure.step("Вызов POST /api/v1/courier/login");
         Integer extractedId = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier/login")
                 .then()
-                .log().body()
                 .statusCode(200)
                 .extract()
                 .path("id");
@@ -204,12 +195,11 @@ public class CourierTests {
 
         Allure.step("Вызов POST /api/v1/courier/login");
         String answer = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courierForLogin)
                 .when()
                 .post("/api/v1/courier/login")
                 .then()
-                .log().body()
                 .statusCode(404)
                 .extract()
                 .path("message");
@@ -239,12 +229,11 @@ public class CourierTests {
 
         Allure.step("Вызов POST /api/v1/courier/login");
         String answer = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courierForLogin)
                 .when()
                 .post("/api/v1/courier/login")
                 .then()
-                .log().body()
                 .statusCode(400)
                 .extract()
                 .path("message");
@@ -265,12 +254,11 @@ public class CourierTests {
 
         Allure.step("Вызов POST /api/v1/courier/login");
         String answer = given()
-                .contentType(ContentType.JSON)
+                .spec(ApiTestsConfig.getSpecification())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier/login")
                 .then()
-                .log().body()
                 .statusCode(404)
                 .extract()
                 .path("message");
