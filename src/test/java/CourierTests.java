@@ -138,7 +138,7 @@ public class CourierTests {
 
     @Test
     @DisplayName("чтобы создать курьера, нужно передать в ручку все обязательные поля; если одного из полей нет, запрос возвращает ошибку;")
-    public void NotAllParametersCreateCourierTest(){
+    public void notAllParametersCreateCourierTest(){
         Courier courier = new Courier(
                 "courierLogin" + UUID.randomUUID(),
                 "");
