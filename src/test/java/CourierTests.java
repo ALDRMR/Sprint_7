@@ -1,9 +1,8 @@
-import Model.Courier;
+import model.Courier;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.devtools.v133.network.model.AlternateProtocolUsage;
 
 import java.util.ArrayList;
 import java.util.List;

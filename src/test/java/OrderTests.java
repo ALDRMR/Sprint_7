@@ -1,4 +1,4 @@
-import Model.Order;
+import model.Order;
 import io.qameta.allure.Allure;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
