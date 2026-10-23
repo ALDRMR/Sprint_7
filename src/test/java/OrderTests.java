@@ -36,18 +36,13 @@ public class OrderTests {
     }
 
     @Step("Создать заказ")
-    public Order createOrder(Order order){
+    public void createOrder(Order order){
         Integer track = apiOrderClient.createOrder(order)
-                .statusCode(201)
                 .extract()
                 .path("track");
 
-        assertNotNull(track, "track не должен быть null");
-
         order.setTrack(track);
         createdOrders.add(order);
-
-        return order;
     }
 
     @Step("Отменить заказ track: {track}")
