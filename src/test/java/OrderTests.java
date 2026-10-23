@@ -1,6 +1,5 @@
 import apiClient.ApiOrderClient;
 import model.Order;
-import io.qameta.allure.Allure;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -36,7 +35,7 @@ public class OrderTests {
         }
     }
 
-    @Step("Создать заказ POST /api/v1/orders")
+    @Step("Создать заказ")
     public Order createOrder(Order order){
         Integer track = apiOrderClient.createOrder(order)
                 .statusCode(201)
@@ -51,10 +50,9 @@ public class OrderTests {
         return order;
     }
 
+    @Step("Отменить заказ track: {track}")
     public void cancelOrder(String track) {
-        Allure.step("Отменить заказ track: " + track);
-
-        apiOrderClient.cancelOrder(track)
+         apiOrderClient.cancelOrder(track)
                 .statusCode(200);
     }
 
@@ -97,7 +95,6 @@ public class OrderTests {
     @MethodSource("orderColorsProvider")
     @DisplayName("Можно указать один из цветов — BLACK или GREY; Можно указать оба цвета; Можно совсем не указывать цвет;")
     public void createOrderColorsTest(List<String> colors) {
-        Allure.step("LOG createOrderColorsTest with colors: " + colors);
 
         Order order = new Order(
                 "Иван" + UUID.randomUUID(),
