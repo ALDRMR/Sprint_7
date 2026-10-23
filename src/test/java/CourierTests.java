@@ -1,4 +1,4 @@
-import config.ApiTestsConfig;
+import apiClient.ApiCourierSteps;
 import model.Courier;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -8,40 +8,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class CourierTests {
 
+    private ApiCourierSteps apiCourierSteps;
     private List<Courier> createdCouriers;
 
     @BeforeEach
     public void setUp() {
+        apiCourierSteps = new ApiCourierSteps();
         createdCouriers = new ArrayList<>();
     }
 
-    @Step("Создать курьера POST /api/v1/courier")
+    @AfterEach
+    public void TearDown() {
+        System.out.println("TearDown createdCouriers count: " + createdCouriers.size());
+        for (Courier courier : createdCouriers) {
+            try {
+                String id = getCourierId(courier);
+                if (id != null) {
+                    deleteCourier(id);
+                }
+            } catch (Exception e) {
+                System.out.println("getId or deleteCourier Exception error: " + e.getMessage());
+            }
+        }
+    }
+
+    @Step("Создать курьера")
     public void createCourier(Courier courier) {
-        given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courier)
-                .when()
-                .post("/api/v1/courier")
-                .then()
+
+        apiCourierSteps.createCourierStep(courier)
                 .statusCode(201);
 
         createdCouriers.add(courier);
     }
 
     public String getCourierId(Courier courier) {
-        Allure.step("getCourierId " + "Вызов /api/v1/courier/login " + courier.getLogin());
-        Integer extractedId = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courier)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
+        Allure.step("Получить id курьера:" + courier.getLogin());
+        Integer extractedId = apiCourierSteps.loginCourierStep(courier)
                 .statusCode(200)
                 .extract()
                 .path("id");
@@ -52,30 +59,11 @@ public class CourierTests {
     }
 
     public void deleteCourier(String id) {
-        Allure.step("Удалить Курьера, вызов /api/v1/courier/{id} id:" + id);
-        given()
-                .spec(ApiTestsConfig.getSpecification())
-                .pathParam("id", id)
-                .when()
-                .delete("/api/v1/courier/{id}")
-                .then()
+        Allure.step("Удалить Курьера id: " + id);
+        apiCourierSteps.deleteCourierStep(id)
                 .statusCode(200);
     }
 
-    @AfterEach
-    public void TearDown() {
-        System.out.println("LOG TearDown" + " createdCouriers count: " + createdCouriers.size());
-        for (Courier courier : createdCouriers) {
-            try {
-                String id = getCourierId(courier);
-                if (id != null) {
-                    deleteCourier(id);
-                }
-            } catch (Exception e) {
-                System.out.println("getId or DeleteCourier error: " + e.getMessage());
-            }
-        }
-    }
 
     @Test
     @DisplayName("курьера можно создать; запрос возвращает правильный код ответа 201; успешный запрос возвращает ok: true;")
@@ -85,13 +73,7 @@ public class CourierTests {
                 "courier_password",
                 "courier_name");
 
-        Allure.step("Вызов POST /api/v1/courier");
-        Boolean answer = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courier)
-                .when()
-                .post("/api/v1/courier")
-                .then()
+        Boolean answer = apiCourierSteps.createCourierStep(courier)
                 .statusCode(201)
                 .extract()
                 .path("ok");
@@ -112,13 +94,7 @@ public class CourierTests {
 
         createCourier(courier);
 
-        Allure.step("Вызов POST /api/v1/courier");
-        String answer = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courier)
-                .when()
-                .post("/api/v1/courier")
-                .then()
+        String answer = apiCourierSteps.createCourierStep(courier)
                 .statusCode(409)
                 .extract()
                 .path("message");
@@ -136,13 +112,7 @@ public class CourierTests {
                 "courierLogin" + UUID.randomUUID(),
                 "");
 
-        Allure.step("Вызов POST /api/v1/courier");
-        String answer = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courier)
-                .when()
-                .post("/api/v1/courier")
-                .then()
+        String answer = apiCourierSteps.createCourierStep(courier)
                 .statusCode(400)
                 .extract()
                 .path("message");
@@ -163,13 +133,7 @@ public class CourierTests {
 
         createCourier(courier);
 
-        Allure.step("Вызов POST /api/v1/courier/login");
-        Integer extractedId = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courier)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
+        Integer extractedId = apiCourierSteps.loginCourierStep(courier)
                 .statusCode(200)
                 .extract()
                 .path("id");
@@ -193,13 +157,7 @@ public class CourierTests {
                 "wrong_courier_password",
                 "courier_name");
 
-        Allure.step("Вызов POST /api/v1/courier/login");
-        String answer = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courierForLogin)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
+        String answer = apiCourierSteps.loginCourierStep(courierForLogin)
                 .statusCode(404)
                 .extract()
                 .path("message");
@@ -227,13 +185,7 @@ public class CourierTests {
                 "",
                 "courier_name");
 
-        Allure.step("Вызов POST /api/v1/courier/login");
-        String answer = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courierForLogin)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
+        String answer = apiCourierSteps.loginCourierStep(courierForLogin)
                 .statusCode(400)
                 .extract()
                 .path("message");
@@ -252,13 +204,7 @@ public class CourierTests {
                 "courier_password",
                 "courier_name");
 
-        Allure.step("Вызов POST /api/v1/courier/login");
-        String answer = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(courier)
-                .when()
-                .post("/api/v1/courier/login")
-                .then()
+        String answer = apiCourierSteps.loginCourierStep(courier)
                 .statusCode(404)
                 .extract()
                 .path("message");

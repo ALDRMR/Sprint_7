@@ -1,10 +1,7 @@
-import config.ApiTestsConfig;
+import apiClient.ApiTestsConfig;
 import model.Order;
 import io.qameta.allure.Allure;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import io.qameta.allure.Step;

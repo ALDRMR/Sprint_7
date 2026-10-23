@@ -1,4 +1,4 @@
-package config;
+package apiClient;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -10,7 +10,7 @@ public class ApiTestsConfig {
         return new RequestSpecBuilder()
                 .setBaseUri("https://qa-scooter.education-services.ru/")
                 .setContentType(ContentType.JSON)
-                .log(LogDetail.BODY)
+                .log(LogDetail.ALL)
                 .build();
     }
 
