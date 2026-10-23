@@ -1,4 +1,4 @@
-import apiClient.ApiCourierSteps;
+import apiClient.ApiCourierClient;
 import model.Courier;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -13,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CourierTests {
 
-    private ApiCourierSteps apiCourierSteps;
+    private ApiCourierClient apiCourierClient;
     private List<Courier> createdCouriers;
 
     @BeforeEach
     public void setUp() {
-        apiCourierSteps = new ApiCourierSteps();
+        apiCourierClient = new ApiCourierClient();
         createdCouriers = new ArrayList<>();
     }
 
@@ -40,7 +40,7 @@ public class CourierTests {
     @Step("Создать курьера")
     public void createCourier(Courier courier) {
 
-        apiCourierSteps.createCourierStep(courier)
+        apiCourierClient.createCourier(courier)
                 .statusCode(201);
 
         createdCouriers.add(courier);
@@ -48,7 +48,7 @@ public class CourierTests {
 
     public String getCourierId(Courier courier) {
         Allure.step("Получить id курьера:" + courier.getLogin());
-        Integer extractedId = apiCourierSteps.loginCourierStep(courier)
+        Integer extractedId = apiCourierClient.loginCourier(courier)
                 .statusCode(200)
                 .extract()
                 .path("id");
@@ -60,7 +60,7 @@ public class CourierTests {
 
     public void deleteCourier(String id) {
         Allure.step("Удалить Курьера id: " + id);
-        apiCourierSteps.deleteCourierStep(id)
+        apiCourierClient.deleteCourier(id)
                 .statusCode(200);
     }
 
@@ -73,7 +73,7 @@ public class CourierTests {
                 "courier_password",
                 "courier_name");
 
-        Boolean answer = apiCourierSteps.createCourierStep(courier)
+        Boolean answer = apiCourierClient.createCourier(courier)
                 .statusCode(201)
                 .extract()
                 .path("ok");
@@ -94,7 +94,7 @@ public class CourierTests {
 
         createCourier(courier);
 
-        String answer = apiCourierSteps.createCourierStep(courier)
+        String answer = apiCourierClient.createCourier(courier)
                 .statusCode(409)
                 .extract()
                 .path("message");
@@ -112,7 +112,7 @@ public class CourierTests {
                 "courierLogin" + UUID.randomUUID(),
                 "");
 
-        String answer = apiCourierSteps.createCourierStep(courier)
+        String answer = apiCourierClient.createCourier(courier)
                 .statusCode(400)
                 .extract()
                 .path("message");
@@ -133,7 +133,7 @@ public class CourierTests {
 
         createCourier(courier);
 
-        Integer extractedId = apiCourierSteps.loginCourierStep(courier)
+        Integer extractedId = apiCourierClient.loginCourier(courier)
                 .statusCode(200)
                 .extract()
                 .path("id");
@@ -157,7 +157,7 @@ public class CourierTests {
                 "wrong_courier_password",
                 "courier_name");
 
-        String answer = apiCourierSteps.loginCourierStep(courierForLogin)
+        String answer = apiCourierClient.loginCourier(courierForLogin)
                 .statusCode(404)
                 .extract()
                 .path("message");
@@ -185,7 +185,7 @@ public class CourierTests {
                 "",
                 "courier_name");
 
-        String answer = apiCourierSteps.loginCourierStep(courierForLogin)
+        String answer = apiCourierClient.loginCourier(courierForLogin)
                 .statusCode(400)
                 .extract()
                 .path("message");
@@ -204,7 +204,7 @@ public class CourierTests {
                 "courier_password",
                 "courier_name");
 
-        String answer = apiCourierSteps.loginCourierStep(courier)
+        String answer = apiCourierClient.loginCourier(courier)
                 .statusCode(404)
                 .extract()
                 .path("message");

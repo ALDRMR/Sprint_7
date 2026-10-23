@@ -1,4 +1,4 @@
-import apiClient.ApiTestsConfig;
+import apiClient.ApiOrderClient;
 import model.Order;
 import io.qameta.allure.Allure;
 import org.junit.jupiter.api.*;
@@ -10,27 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 public class OrderTests {
 
+    private ApiOrderClient apiOrderClient;
     private List<Order> createdOrders;
 
     @BeforeEach
     public void setUp() {
+        apiOrderClient = new ApiOrderClient();
         createdOrders = new ArrayList<>();
+    }
+
+    @AfterEach
+    public void TearDown() {
+        System.out.println("TearDown createdOrders.size(): " + createdOrders.size());
+        for (Order order : createdOrders) {
+            try {
+                cancelOrder(order.getTrack().toString());
+            } catch (Exception e) {
+                System.out.println("TearDown Exception error: " + e.getMessage());
+            }
+        }
     }
 
     @Step("Создать заказ POST /api/v1/orders")
     public Order createOrder(Order order){
-        Integer track = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(order)
-                .when()
-                .post("/api/v1/orders")
-                .then()
+        Integer track = apiOrderClient.createOrder(order)
                 .statusCode(201)
                 .extract()
                 .path("track");
@@ -44,27 +52,10 @@ public class OrderTests {
     }
 
     public void cancelOrder(String track) {
-        Allure.step("Отменить заказ PUT /api/v1/orders/cancel track: " + track);
+        Allure.step("Отменить заказ track: " + track);
 
-        given()
-                .spec(ApiTestsConfig.getSpecification())
-                .queryParam("track", track)
-                .when()
-                .put("/api/v1/orders/cancel")
-                .then()
+        apiOrderClient.cancelOrder(track)
                 .statusCode(200);
-    }
-
-    @AfterEach
-    public void TearDown() {
-        System.out.println("TearDown createdOrders.size(): " + createdOrders.size());
-        for (Order order : createdOrders) {
-            try {
-                cancelOrder(order.getTrack().toString());
-            } catch (Exception e) {
-                System.out.println("TearDown Exception error: " + e.getMessage());
-            }
-        }
     }
 
 
@@ -83,13 +74,7 @@ public class OrderTests {
                 List.of("BLACK")
         );
 
-        Allure.step("вызов POST /api/v1/orders");
-        Integer track = given()
-                .spec(ApiTestsConfig.getSpecification())
-                .body(order)
-                .when()
-                .post("/api/v1/orders")
-                .then()
+        Integer track = apiOrderClient.createOrder(order)
                 .statusCode(201)
                 .extract()
                 .path("track");
@@ -171,12 +156,7 @@ public class OrderTests {
         createOrder(order2);
         createOrder(order3);
 
-        Allure.step("Вызов GET /api/v1/orders");
-            given()
-                    .spec(ApiTestsConfig.getSpecification())
-                .when()
-                .get("/api/v1/orders")
-                .then()
+            apiOrderClient.getOrderList()
                 .statusCode(200);
     }
 }
