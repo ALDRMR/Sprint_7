@@ -18,7 +18,8 @@ public class ApiOrderClient {
                 .body(order)
                 .when()
                 .post(ORDERS_PATH)
-                .then();
+                .then()
+                .spec(ApiTestsConfig.getResponseSpecification());
     }
 
     @Step("Отменить заказ PUT " + ORDERS_CANCEL_PATH)
@@ -28,7 +29,8 @@ public class ApiOrderClient {
                 .queryParam("track", track)
                 .when()
                 .put(ORDERS_CANCEL_PATH)
-                .then();
+                .then()
+                .spec(ApiTestsConfig.getResponseSpecification());
     }
 
     @Step("Получить список заказов GET " + ORDERS_PATH)
@@ -37,6 +39,7 @@ public class ApiOrderClient {
                 .spec(ApiTestsConfig.getSpecification())
                 .when()
                 .get(ORDERS_PATH)
-                .then();
+                .then()
+                .spec(ApiTestsConfig.getResponseSpecification());
     }
 }

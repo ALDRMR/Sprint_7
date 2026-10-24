@@ -19,7 +19,8 @@ public class ApiCourierClient {
                 .body(courier)
                 .when()
                 .post(COURIER_PATH)
-                .then();
+                .then()
+                .spec(ApiTestsConfig.getResponseSpecification());
     }
 
     @Step("Залогинить курьера POST " + COURIER_LOGIN_PATH)
@@ -29,7 +30,8 @@ public class ApiCourierClient {
                 .body(courier)
                 .when()
                 .post(COURIER_LOGIN_PATH)
-                .then();
+                .then()
+                .spec(ApiTestsConfig.getResponseSpecification());
     }
 
     @Step("Удалить курьера DELETE " + COURIER_DELETE_PATH)
@@ -39,6 +41,7 @@ public class ApiCourierClient {
                 .pathParam("id", id)
                 .when()
                 .delete(COURIER_DELETE_PATH)
-                .then();
+                .then()
+                .spec(ApiTestsConfig.getResponseSpecification());
     }
 }
