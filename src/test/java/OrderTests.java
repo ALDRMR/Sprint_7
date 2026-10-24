@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
@@ -149,6 +150,8 @@ public class OrderTests {
         createOrder(order3);
 
             apiOrderClient.getOrderList()
-                .statusCode(200);
+                .statusCode(200)
+                .body("orders", notNullValue())
+                .body("orders", hasSize(greaterThan(0)));
     }
 }

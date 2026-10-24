@@ -83,7 +83,6 @@ public class CourierTests {
         assertTrue(answer);
     }
 
-    @Disabled
     @Test
     @DisplayName("нельзя создать двух одинаковых курьеров; если создать пользователя с логином, который уже есть, возвращается ошибка.")
     public void couldNotCreateSameCourierTest(){
