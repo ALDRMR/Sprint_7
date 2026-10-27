@@ -1,4 +1,4 @@
-import apiClient.ApiCourierClient;
+import apiclient.ApiCourierClient;
 import model.Courier;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;

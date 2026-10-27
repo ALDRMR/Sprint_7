@@ -1,4 +1,4 @@
-package apiClient;
+package apiclient;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
