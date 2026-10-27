@@ -25,13 +25,13 @@ public class OrderTests {
     }
 
     @AfterEach
-    public void TearDown() {
-        System.out.println("TearDown createdOrders.size(): " + createdOrders.size());
+    public void tearDown() {
+        System.out.println("tearDown createdOrders.size(): " + createdOrders.size());
         for (Order order : createdOrders) {
             try {
                 cancelOrder(order.getTrack().toString());
             } catch (Exception e) {
-                System.out.println("TearDown Exception error: " + e.getMessage());
+                System.out.println("tearDown Exception error: " + e.getMessage());
             }
         }
     }

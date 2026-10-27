@@ -23,8 +23,8 @@ public class CourierTests {
     }
 
     @AfterEach
-    public void TearDown() {
-        System.out.println("TearDown createdCouriers count: " + createdCouriers.size());
+    public void tearDown() {
+        System.out.println("tearDown createdCouriers count: " + createdCouriers.size());
         for (Courier courier : createdCouriers) {
             try {
                 String id = getCourierId(courier);
@@ -124,7 +124,7 @@ public class CourierTests {
 
     @Test
     @DisplayName("Логин курьера; курьер может авторизоваться; для авторизации нужно передать все обязательные поля; успешный запрос возвращает id.")
-    public void LoginCourierTest(){
+    public void loginCourierTest(){
         Courier courier = new Courier(
                 "courierLogin" + UUID.randomUUID(),
                 "courier_password",
@@ -143,7 +143,7 @@ public class CourierTests {
 
     @Test
     @DisplayName("система вернёт ошибку, если неправильно указать логин или пароль;")
-    public void LoginCourierWrongParameterTest(){
+    public void loginCourierWrongParameterTest(){
         Courier courier = new Courier(
                 "courierLogin" + UUID.randomUUID(),
                 "courier_password",
@@ -169,7 +169,7 @@ public class CourierTests {
 
     @Test
     @DisplayName("если какого-то поля нет, запрос возвращает ошибку;")
-    public void LoginCourierEmptyParameterTest(){
+    public void loginCourierEmptyParameterTest(){
         String courierLogin = "courierLogin" + UUID.randomUUID();
 
         Courier courier = new Courier(
@@ -197,7 +197,7 @@ public class CourierTests {
 
     @Test
     @DisplayName("если авторизоваться под несуществующим пользователем, запрос возвращает ошибку;")
-    public void LoginCourierNonExistentCourierTest(){
+    public void loginCourierNonExistentCourierTest(){
         Courier courier = new Courier(
                 "courierLogin" + UUID.randomUUID(),
                 "courier_password",
